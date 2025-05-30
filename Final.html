@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>McGehee Properties Map</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+  <style>
+    #map { height: 100vh; }
+    .popup-content { font-size: 14px; }
+  </style>
+</head>
+<body>
+
+<div id="map"></div>
+
+<script>
+  const properties = [
+    { address: "1005 Thompson St McGehee, Arkansas 71654", lat: 33.6276, lng: -91.3973 },
+    { address: "107 S 4th st McGehee, Arkansas 71654", lat: 33.6268, lng: -91.3979 },
+    { address: "1105 N 4th McGehee, Arkansas 71654", lat: 33.6333, lng: -91.3957 },
+    { address: "1135 N Gabbert St Monticello, Arkansas 71655", lat: 33.6341, lng: -91.7901 },
+    { address: "1226 Bush st McGehee, Arkansas 71654", lat: 33.6205, lng: -91.4052 },
+    { address: "1311 Highway 278 W Monticello, Arkansas 71655", lat: 33.6226, lng: -91.8063 },
+    { address: "1704 Old Tillar Hwy McGehee, Arkansas 71654", lat: 33.6342, lng: -91.4139 },
+    { address: "190 Deeper Green Rd Monticello, Arkansas 71655", lat: 33.6184, lng: -91.7946 },
+    { address: "206 1/2 Elm St A McGehee, Arkansas 71654", lat: 33.6227, lng: -91.4013 },
+    { address: "206 1/2 Elm St B McGehee, Arkansas 71654", lat: 33.6227, lng: -91.4013 },
+    { address: "206 W Elm st McGehee, Arkansas 71654", lat: 33.6224, lng: -91.4015 },
+    { address: "207 S 2nd St. Apt A McGehee, Arkansas 71654", lat: 33.6212, lng: -91.3982 },
+    { address: "207 S 2nd St. Apt B McGehee, Arkansas 71654", lat: 33.6212, lng: -91.3982 },
+    { address: "207 S 5th st McGehee, Arkansas 71654", lat: 33.6211, lng: -91.3952 },
+    { address: "210 N Adams McGehee, Arkansas 71654", lat: 33.6236, lng: -91.3986 },
+    { address: "301 W Poplar A McGehee, Arkansas 71654", lat: 33.6250, lng: -91.4015 },
+    { address: "301 W Poplar B McGehee, Arkansas 71654", lat: 33.6250, lng: -91.4015 },
+    { address: "305 Carver St McGehee, Arkansas 71654", lat: 33.6184, lng: -91.4023 },
+    { address: "305 S 5th McGehee, Arkansas 71654", lat: 33.6199, lng: -91.3950 },
+    { address: "312 S 3rd A McGehee, Arkansas 71654", lat: 33.6203, lng: -91.3972 },
+    { address: "312 S 3rd B McGehee, Arkansas 71654", lat: 33.6203, lng: -91.3972 },
+    { address: "312 S 3rd C McGehee, Arkansas 71654", lat: 33.6203, lng: -91.3972 },
+    { address: "312 W Cedar St McGehee, Arkansas 71654", lat: 33.6207, lng: -91.4006 },
+    { address: "316 S 5th st McGehee, Arkansas 71654", lat: 33.6194, lng: -91.3945 },
+    { address: "407 N 5th McGehee, Arkansas 71654", lat: 33.6286, lng: -91.3943 },
+    { address: "407 School St McGehee, Arkansas 71654", lat: 33.6192, lng: -91.3997 },
+    { address: "409 S 5th st McGehee, Arkansas 71654", lat: 33.6188, lng: -91.3944 },
+    { address: "411 S 5th McGehee, Arkansas 71654", lat: 33.6185, lng: -91.3943 },
+    { address: "411 Valley Rd McGehee, Arkansas 71654", lat: 33.6232, lng: -91.4029 },
+    { address: "511 N Slemons St Monticello, Arkansas 71655", lat: 33.6275, lng: -91.7811 },
+    { address: "702 N 4th McGehee, Arkansas 71654", lat: 33.6311, lng: -91.3963 },
+    { address: "704 N 4th St. McGehee, Arkansas 71654", lat: 33.6316, lng: -91.3963 },
+    { address: "705 Grandview Dr McGehee, Arkansas 71654", lat: 33.6292, lng: -91.4032 },
+    { address: "706 Grandview Dr McGehee, Arkansas 71654", lat: 33.6294, lng: -91.4034 },
+    { address: "706 N 4th st McGehee, Arkansas 71654", lat: 33.6319, lng: -91.3961 },
+    { address: "711 N 2nd Apt A McGehee, Arkansas 71654", lat: 33.6318, lng: -91.3986 },
+    { address: "711 N 2nd Apt B McGehee, Arkansas 71654", lat: 33.6318, lng: -91.3986 },
+    { address: "729 Highway 35 Dermott, Arkansas 71638", lat: 33.5266, lng: -91.4402 },
+    { address: "801 Thompson St McGehee, Arkansas 71654", lat: 33.6264, lng: -91.3975 },
+    { address: "802 Thompson st McGehee, Arkansas 71654", lat: 33.6265, lng: -91.3974 },
+    { address: "803 N 4th St A McGehee, Arkansas 71654", lat: 33.6337, lng: -91.3953 },
+    { address: "803 N 4th St B McGehee, Arkansas 71654", lat: 33.6337, lng: -91.3953 },
+    { address: "803 N 5th st McGehee, Arkansas 71654", lat: 33.6337, lng: -91.3936 },
+    { address: "805 N 5th st McGehee, Arkansas 71654", lat: 33.6339, lng: -91.3935 },
+    { address: "803 W Daniels St Dermott, Arkansas 71638", lat: 33.5248, lng: -91.4408 },
+    { address: "814 N 4th McGehee, Arkansas 71654", lat: 33.6344, lng: -91.3952 },
+    { address: "903 N 5th St McGehee, Arkansas 71654", lat: 33.6353, lng: -91.3930 },
+    { address: "904 Thompson St McGehee, Arkansas 71654", lat: 33.6270, lng: -91.3971 }
+  ];
+
+  const map = L.map('map').setView([33.6265, -91.3974], 13);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors'
+  }).addTo(map);
+
+  properties.forEach(p => {
+    if (p.lat && p.lng) {
+      const marker = L.marker([p.lat, p.lng]).addTo(map);
+      marker.bindPopup(`<div class='popup-content'><strong>${p.address}</strong></div>`);
+    }
+  });
+</script>
+
+</body>
+</html>
