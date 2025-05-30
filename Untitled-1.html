@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Interactive Property Map</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+  <style>
+    #map {
+      height: 100vh;
+    }
+    .popup-content {
+      font-size: 14px;
+    }
+    .popup-content a {
+      display: block;
+      margin-top: 4px;
+      color: #007bff;
+    }
+  </style>
+</head>
+<body>
+
+<div id="map"></div>
+
+<script>
+  const properties = [
+    {
+      address: "123 Main St, Springfield, IL",
+      lat: 39.7817,
+      lng: -89.6501,
+      detailsUrl: "https://example.com/123-main",
+      flyer: "https://example.com/123-main-flyer.pdf",
+      photos: "https://example.com/123-main-photos"
+    },
+    {
+      address: "456 Oak Ave, Dallas, TX",
+      lat: 32.7767,
+      lng: -96.7970,
+      detailsUrl: "https://example.com/456-oak",
+      flyer: "https://example.com/456-oak-flyer.pdf",
+      photos: "https://example.com/456-oak-photos"
+    }
+  ];
+
+  const map = L.map('map').setView([37.8, -96], 4);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors'
+  }).addTo(map);
+
+  properties.forEach(property => {
+    const marker = L.marker([property.lat, property.lng]).addTo(map);
+    const popupContent = `
+      <div class="popup-content">
+        <strong>${property.address}</strong><br>
+        <a href="${property.detailsUrl}" target="_blank">Property Details</a>
+        <a href="${property.flyer}" target="_blank">Download Flyer</a>
+        <a href="${property.photos}" target="_blank">View Photos</a>
+      </div>
+    `;
+    marker.bindPopup(popupContent);
+  });
+</script>
+
+</body>
+</html>
